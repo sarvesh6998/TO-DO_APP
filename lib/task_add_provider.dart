@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'task.dart';
+import 'main.dart';
 
 class TaskProvider extends ChangeNotifier {
-  TaskProvider.init() {}
   TaskProvider();
   TextEditingController taskController = TextEditingController();
   TextEditingController descController = TextEditingController();
-  var _taskList;
+  List<Task> _taskList = [];
 
-  get taskList => _taskList;
-  addTask(task) {
-    // _taskList.add(task);
-    _taskList = task;
+  List<Task> get taskList => _taskList;
+
+  addTask() {
+    initialTaskList.add(taskController.text);
     notifyListeners();
+    updatedTask();
+  }
+
+  var newTaskList;
+
+  updatedTask() async {
+    await box.add(taskController.text);
   }
 }
-
-// class Task {
-//   String? taskName;
-//   String? taskDesc;
-//   Task({this.taskName, this.taskDesc});
-// }

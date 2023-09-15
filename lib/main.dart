@@ -3,12 +3,16 @@ import 'package:provider/provider.dart';
 import 'package:task_provider/task_add_provider.dart';
 import 'package:task_provider/task_screen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'task.dart';
 
 final String taskDB = 'taskDB';
-late final box;
+late final Box box;
+late List<String> initialTaskList;
 void main() async {
   await Hive.initFlutter();
-  box = await Hive.openBox(taskDB);
+  Hive.registerAdapter(TaskAdapter());
+  box = await Hive.openBox('taskDatabase');
+
   print("initial box :${box.values}");
   runApp(const MyApp());
 }
@@ -21,15 +25,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  var initialTaskList;
   @override
   void initState() {
     super.initState();
-    // final taskBox = Hive.box(taskDB);
-    initialTaskList = box.values.map((e) => e).toList();
-    print('init called$initialTaskList');
-    // box.clear();
-    // print('Erase list called$initialTaskList');
+
+    initialTaskList = box.values.toList().cast<String>();
   }
 
   @override

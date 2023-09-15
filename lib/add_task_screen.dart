@@ -3,10 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:task_provider/task_add_provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'main.dart';
+import 'task.dart';
 
 class AddTaskScreen extends StatelessWidget {
   AddTaskScreen({super.key});
-  List? editedTaskList;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,16 +70,8 @@ class AddTaskScreen extends StatelessWidget {
                           height: 80,
                         ),
                         ElevatedButton(
-                            onPressed: () async {
-                              var name = await box
-                                  .add(taskProvider.taskController.text);
-                              editedTaskList =
-                                  box.values.map((e) => e).toList();
-                              print('edited task list print: $editedTaskList');
-                              taskProvider.addTask(
-                                  editedTaskList ?? ["Task 1", "Task 2"]);
-                              taskProvider.descController.clear();
-                              taskProvider.taskController.clear();
+                            onPressed: () {
+                              taskProvider.addTask();
                               Navigator.pop(context);
                             },
                             child: const Text('Add Task'))
