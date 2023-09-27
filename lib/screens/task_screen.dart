@@ -16,12 +16,6 @@ class TaskScreen extends StatelessWidget {
         elevation: 0.0,
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 228, 154, 41),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),
         title: Text('Tasks',
             style: GoogleFonts.montserrat(
                 fontStyle: FontStyle.normal, fontSize: 25.0)),
@@ -36,6 +30,9 @@ class TaskScreen extends StatelessWidget {
                 final task = taskProvider.taskList[index];
                 return ListTile(
                   title: Text(task.taskName),
+                  subtitle: Text(task.priority == true
+                      ? "Priority: High"
+                      : "Priority: Low"),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

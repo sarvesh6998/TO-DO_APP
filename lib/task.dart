@@ -9,7 +9,20 @@ class Task extends HiveObject {
   String taskName;
   @HiveField(2)
   String? taskDesc;
-  Task({this.id, required this.taskName, this.taskDesc});
+  @HiveField(3)
+  bool priority;
 
-  Map toJson() => {id: id, "taskName": taskName, "taskDesc": taskDesc};
+  Task({
+    this.id,
+    required this.taskName,
+    this.taskDesc,
+    required this.priority,
+  });
+
+  Map toJson() => {
+        id: id,
+        "taskName": taskName,
+        "taskDesc": taskDesc,
+        "priority": priority
+      };
 }

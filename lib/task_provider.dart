@@ -26,22 +26,11 @@ class TaskProvider extends ChangeNotifier {
     _loadTask();
   }
 
-  // Future<void> _createItem(Map<String, dynamic> newItem) async {
-  //   await box.add(newItem);
-  //   int i = 0;
-  //   box.keys.map((e) {
-  //     i = e;
-  //     return e;
-  //   }).toList();
-  //   updateIndex(i);
-  //   refreshItem();
-  //   notifyListeners();
-  //   print("amount data is ${box.length}");
-  // }
-
   Future<void> updateTask(Task task) async {
     task.save();
 
     _loadTask();
   }
+
+  priorityTask() {}
 }

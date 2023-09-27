@@ -15,6 +15,8 @@ class AddTaskScreen extends StatefulWidget {
   State<AddTaskScreen> createState() => _AddTaskScreenState();
 }
 
+enum PriorityClass { High, Low }
+
 class _AddTaskScreenState extends State<AddTaskScreen> {
   final formKey = GlobalKey<FormState>();
   TextEditingController taskController = TextEditingController();
@@ -24,6 +26,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     taskController.text = widget.task?.taskName ?? "";
     descController.text = widget.task?.taskDesc ?? "";
   }
+
+  PriorityClass? _character = PriorityClass.Low;
 
   Box<Task> _taskBox = Hive.box('taskk');
   // late bool isUpdate = widget.task != null;
@@ -42,20 +46,22 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             },
             icon: const Icon(Icons.arrow_back),
           ),
-          title: Text('Add Task',
+          title: Text(widget.isUpdate ? 'Update Task' : 'Add Task',
               style: GoogleFonts.montserrat(
                   fontStyle: FontStyle.normal, fontSize: 25.0)),
         ),
-        body: SingleChildScrollView(
+        body: Container(
+          margin: EdgeInsets.only(top: 60),
           child: Form(
               key: formKey,
               child: Consumer<TaskProvider>(builder: (_, taskProvider, __) {
                 return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 66, vertical: 86),
+                            horizontal: 66, vertical: 10),
                         child: TextFormField(
                           textAlignVertical: TextAlignVertical.center,
                           textAlign: TextAlign.center,
@@ -79,7 +85,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 66, vertical: 1),
+                            horizontal: 66, vertical: 10),
                         child: TextFormField(
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -98,38 +104,87 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         ),
                       ),
                       const SizedBox(
-                        height: 80,
+                        height: 8,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 66, vertical: 86),
-                        child: ElevatedButton(
-                            style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(450.00)),
-                                fixedSize: Size(
-                                    MediaQuery.of(context).size.width, 50.0),
-                                backgroundColor:
-                                    const Color.fromARGB(255, 228, 154, 41)),
-                            onPressed: () {
-                              if (formKey.currentState?.validate() == true) {
-                                if (widget.isUpdate == true) {
-                                  widget.task?.taskName = taskController.text;
-                                  widget.task?.taskDesc = descController.text;
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child: RadioListTile(
+                                dense: true,
+                                activeColor:
+                                    const Color.fromARGB(255, 228, 154, 41),
+                                title: const Text('High'),
+                                value: PriorityClass.High,
+                                groupValue: _character,
+                                onChanged: (PriorityClass? value) {
+                                  setState(() {
+                                    _character = value;
+                                  });
+                                },
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Flexible(
+                              child: RadioListTile(
+                                dense: true,
+                                activeColor:
+                                    const Color.fromARGB(255, 228, 154, 41),
+                                title: const Text('Low'),
+                                value: PriorityClass.Low,
+                                groupValue: _character,
+                                onChanged: (PriorityClass? value) {
+                                  setState(() {
+                                    _character = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ]),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 66, vertical: 50),
+                      child: ElevatedButton(
+                          style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(450.00)),
+                              fixedSize:
+                                  Size(MediaQuery.of(context).size.width, 50.0),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 228, 154, 41)),
+                          onPressed: () {
+                            if (formKey.currentState?.validate() == true) {
+                              if (widget.isUpdate == true) {
+                                widget.task?.taskName = taskController.text;
+                                widget.task?.taskDesc = descController.text;
+                                widget.task?.priority =
+                                    _character == PriorityClass.High
+                                        ? true
+                                        : false;
 
-                                  taskProvider.updateTask(widget.task!);
-                                } else {
-                                  taskProvider.addTask(Task(
-                                      taskName: taskController.text,
-                                      taskDesc: descController.text));
-                                }
-                                Navigator.pop(context);
+                                taskProvider.updateTask(widget.task!);
+                              } else {
+                                taskProvider.addTask(Task(
+                                  taskName: taskController.text,
+                                  taskDesc: descController.text,
+                                  priority: _character == PriorityClass.High
+                                      ? true
+                                      : false,
+                                ));
                               }
-                            },
-                            child: const Text('Add Task Button')),
-                      )
-                    ]);
+                              Navigator.pop(context);
+                            }
+                          },
+                          child: const Text('Add Task Button')),
+                    )
+                  ],
+                );
               })),
         ),
       ),

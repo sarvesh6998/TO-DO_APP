@@ -8,7 +8,9 @@ import 'task.dart';
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TaskAdapter());
-  await Hive.openBox<Task>('taskk');
+  final box = await Hive.openBox<Task>('taskk');
+
+  box.clear();
   runApp(const MyApp());
 }
 
