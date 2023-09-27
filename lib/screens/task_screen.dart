@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'add_task_screen.dart';
-import 'package:task_provider/task_add_provider.dart';
+import 'package:task_provider/task_provider.dart';
 
 class TaskScreen extends StatelessWidget {
   const TaskScreen({super.key});

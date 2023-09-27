@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:task_provider/task_add_provider.dart';
+import 'package:task_provider/task_provider.dart';
 
 import '../task.dart';
 
@@ -16,12 +16,17 @@ class AddTaskScreen extends StatefulWidget {
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
-  Box<Task> _taskBox = Hive.box('taskk');
-  // late bool isUpdate = widget.task != null;
-
   final formKey = GlobalKey<FormState>();
   TextEditingController taskController = TextEditingController();
   TextEditingController descController = TextEditingController();
+  @override
+  void initState() {
+    taskController.text = widget.task?.taskName ?? "";
+    descController.text = widget.task?.taskDesc ?? "";
+  }
+
+  Box<Task> _taskBox = Hive.box('taskk');
+  // late bool isUpdate = widget.task != null;
 
   @override
   Widget build(BuildContext context) {
